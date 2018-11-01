@@ -1,0 +1,82 @@
+title: BK Home
+
+background: center / cover no-repeat url("/background.png") fixed
+
+views:
+
+  - icon: mdi:sleep
+    title: Bedroom
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: horizontal-stack
+            cards:
+              - type: entities
+                title: Time
+                entities:
+                  - entity: input_datetime.alarm_1_mon_time
+                    name: Mon
+                  - entity: input_datetime.alarm_1_tue_time
+                    name: Tue
+                  - entity: input_datetime.alarm_1_wed_time
+                    name: Wed
+                  - entity: input_datetime.alarm_1_thu_time
+                    name: Thu
+                  - entity: input_datetime.alarm_1_fri_time
+                    name: Fri
+                  - entity: input_datetime.alarm_1_sat_time
+                    name: Sat
+                  - entity: input_datetime.alarm_1_sun_time
+                    name: Sun
+              - type: entities
+                title: Days
+                entities:
+                  - entity: input_boolean.alarm_1_mon
+                    name: "Mon"
+                    icon: " "
+                  - entity: input_boolean.alarm_1_tue
+                    name: "Tue"
+                    icon: " "
+                  - entity: input_boolean.alarm_1_wed
+                    name: "Wed"
+                    icon: " "
+                  - entity: input_boolean.alarm_1_thu
+                    name: "Thu"
+                    icon: " "
+                  - entity: input_boolean.alarm_1_fri
+                    name: "Fri"
+                    icon: " "
+                  - entity: input_boolean.alarm_1_sat
+                    name: "Sat"
+                    icon: " "
+                  - entity: input_boolean.alarm_1_sun
+                    name: "Sun"
+                    icon: " "
+          - type: entities
+            entities:
+              - type: call-service
+                icon: mdi:settings
+                name: Settings
+                action_name: "show/hide"
+                service: input_boolean.toggle
+                service_data:
+                  entity_id: input_boolean.alarm_1_settings
+      - type: conditional
+        conditions:
+          - entity: input_boolean.alarm_1_settings
+            state: "on"
+        card:
+          type: entities
+          title: Wecker - Settings
+          show_header_toggle: false
+          entities: 
+            - input_boolean.alarm_1_notify
+            - input_number.alarm_1_notify_offset_min
+            - input_boolean.alarm_1_snoozing
+            - input_number.alarm_1_snoozing_min
+            - input_boolean.alarm_1_wakeup_light
+            - input_number.alarm_1_light_offset_min
+            - input_boolean.alarm_1_wakeup_music
+            - input_number.alarm_1_music_offset_min
+            - input_boolean.alarm_1_wakeup_climate
+            - input_number.alarm_1_climate_offset_min
