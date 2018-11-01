@@ -1,0 +1,13 @@
+# iOS Apple Support
+ios:
+  push:
+    categories:
+      - name: 'alarm 1 clock'
+        identifier: 'alarm_1_clock'
+        actions:
+          - identifier: 'ALARM_1_AWAKE'
+            title: 'Awake'
+            destructive: no
+          - identifier: 'ALARM_1_SNOOZE'
+            title: 'Snooze'
+            destructive: yes
