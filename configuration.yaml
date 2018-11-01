@@ -105,7 +105,7 @@ xiaomi_aqara:
 homematic:
   interfaces:
     wireless:
-      host: 192.168.2.159
+      host: !secret homematic_host
 
 fritzbox:
   devices:
@@ -118,13 +118,11 @@ device_tracker:
 #  - platform: fritz
   - platform: nmap_tracker
     hosts:
-      - 192.168.2.152
+      - !secret device_001_host
 #    hosts: !secret home_net 
     exclude: 
-#      - 192.168.2.101
-#      - 192.168.2.149
-      - 192.168.2.63
-      - 192.168.2.152
+      - !secret device_001_host
+      - !secret device_002_host
     home_interval: 15
     consider_home: 600
     interval_seconds: 60
@@ -153,8 +151,8 @@ notify:
   - name: all
     platform: group
     services:
-      - service: !secret device_1
-      - service: !secret device_2
+      - service: !secret device_001_name
+      - service: !secret device_002_name
 
 python_script:
 
