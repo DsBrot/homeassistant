@@ -1,0 +1,173 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: BK
+  # Location required to calculate the time the sun rises and sets
+  latitude: !secret home_latitude
+  longitude: !secret home_longitude
+  # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: !secret home_elevation
+  # metric for Metric, imperial for Imperial
+  unit_system: metric
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: Europe/Berlin
+  # Customization file
+  customize: !include customize.yaml
+  # Packages
+  packages: !include_dir_named packages/
+
+# Show links to resources in log and frontend
+#introduction:
+
+# Enables the frontend
+frontend:
+
+# Enables configuration UI
+config:
+
+# logger
+logger:
+  default: info
+
+# Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+http:
+  api_password : !secret api_password
+  server_port : !secret server_port
+
+influxdb:
+  host: homeassivm
+  username: !secret influxdb_username
+  password: !secret influxdb_password
+  include:
+    entities:
+      - sensor.balkon_temp
+      - sensor.living_temp
+      - sensor.bedroom_temp
+
+
+#   base_url: example.duckdns.org:8123
+
+# Checks for available updates
+# Note: This component will send some information about your system to
+# the developers to assist with development of Home Assistant.
+# For more information, please see:
+# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
+updater:
+  # Optional, allows Home Assistant developers to focus on popular components.
+  # include_used_components: true
+
+# Discover some devices automatically
+discovery:
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+
+# Enables support for tracking state changes over time
+history:
+
+# View all events in a logbook
+logbook:
+
+# Enables a map showing the location of tracked devices
+map:
+
+# Track the sun
+sun:
+
+# Weather prediction
+# Dieser Bereich ist in der sensors.yaml Datei
+#sensor:
+#  - platform: yr
+#    name: Wetter
+
+weather:
+  - platform: yweather
+    name: home
+    woeid: !secret woeid
+
+# Text to speech
+tts:
+  - platform: google
+
+# Cloud
+cloud:
+
+# Gateways
+tradfri:
+  host: !secret tradfri_host
+  allow_tradfri_groups: false
+
+xiaomi_aqara:
+  #interface: !secret xiaomi_host
+  gateways:
+  #  - mac: !secret xiaomi_mac
+    - key: !secret xiaomi_key
+
+homematic:
+  interfaces:
+    wireless:
+      host: 192.168.2.159
+
+fritzbox:
+  devices:
+    - host: !secret fritz_host
+      username: !secret fritz_user
+      password: !secret fritz_pw
+
+# Device Tracker
+device_tracker:
+#  - platform: fritz
+  - platform: nmap_tracker
+    hosts:
+      - 192.168.2.152
+#    hosts: !secret home_net 
+    exclude: 
+#      - 192.168.2.101
+#      - 192.168.2.149
+      - 192.168.2.63
+      - 192.168.2.152
+    home_interval: 15
+    consider_home: 600
+    interval_seconds: 60
+#    scan_options: " --privileged -sP "
+    new_device_defaults:
+      track_new_devices: false
+      hide_if_away: false
+
+# iOS Apple Support
+ios:
+  push:
+    categories:
+      - name: 'alarm 1 clock'
+        identifier: 'alarm_1_clock'
+        actions:
+          - identifier: 'ALARM_1_AWAKE'
+            title: 'Awake'
+            destructive: no
+          - identifier: 'ALARM_1_SNOOZE'
+            title: 'Snooze'
+            destructive: yes
+      
+
+# Notifier Group
+notify:
+  - name: all
+    platform: group
+    services:
+      - service: !secret device_1
+      - service: !secret device_2
+
+python_script:
+
+# Config Files
+alert: !include alerts.yaml
+automation: !include_dir_merge_list automations/
+binary_sensor: !include binary_sensors.yaml
+group: !include groups.yaml
+input_boolean: !include input_boolean.yaml
+light: !include lights.yaml
+media_player: !include media_players.yaml
+script: !include_dir_merge_named scripts/
+sensor: !include sensors.yaml
+scene: !include_dir_merge_list scene/
+switch: !include switches.yaml
+zone: !include zones.yaml
