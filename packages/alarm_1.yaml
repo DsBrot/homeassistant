@@ -1,0 +1,664 @@
+input_datetime:
+  alarm_1_mon_time:
+    name: alarm_1_mon_time
+    has_date: false
+    has_time: true
+    initial: '06:50:00'
+  alarm_1_tue_time:
+    name: alarm_1_tue_time
+    has_date: false
+    has_time: true
+    initial: '06:50:00'
+  alarm_1_wed_time:
+    name: alarm_1_wed_time
+    has_date: false
+    has_time: true
+    initial: '06:50:00'
+  alarm_1_thu_time:
+    name: alarm_1_thu_time
+    has_date: false
+    has_time: true
+    initial: '06:50:00'
+  alarm_1_fri_time:
+    name: alarm_1_fri_time
+    has_date: false
+    has_time: true
+    initial: '06:50:00'
+  alarm_1_sat_time:
+    name: alarm_1_sat_time
+    has_date: false
+    has_time: true
+    initial: '09:00:00'
+  alarm_1_sun_time:
+    name: alarm_1_sun_time
+    has_date: false
+    has_time: true
+    initial: '09:00:00'
+
+#######################################################################################
+input_boolean:
+  alarm_1_mon:
+    name: Monday
+    initial: off
+    icon: mdi:calendar
+  alarm_1_tue:
+    name: Tuesday
+    initial: off
+    icon: mdi:calendar
+  alarm_1_wed:
+    name: Wednesday
+    initial: off
+    icon: mdi:calendar
+  alarm_1_thu:
+    name: Thursday
+    initial: off
+    icon: mdi:calendar
+  alarm_1_fri:
+    name: Friday
+    initial: off
+    icon: mdi:calendar
+  alarm_1_sat:
+    name: Saturday
+    initial: off
+    icon: mdi:calendar
+  alarm_1_sun:
+    name: Sunday
+    initial: off
+    icon: mdi:calendar
+  alarm_1_notify:
+    name: notify
+    initial: on
+    icon: mdi:cellphone-message
+  alarm_1_snoozing:
+    name: snoozing
+    initial: off
+    icon: mdi:alarm-snooze
+  alarm_1_wakeup_light:
+    name: wakeup_light
+    initial: off
+    icon: mdi:lightbulb-on-outline
+  alarm_1_wakeup_music:
+    name: wakeup_music
+    initial: off
+    icon: mdi:music
+  alarm_1_wakeup_climate:
+    name: wakeup_climate
+    initial: off
+    icon: mdi:midi-port
+  alarm_1_settings:
+    name: settings
+    initial: off
+    icon: mdi:settings
+  
+
+#######################################################################################
+input_number:
+  alarm_1_snoozing_min:
+    name: snoozing_min
+    initial: 9
+    min: 1
+    max: 20
+    step: 1
+    unit_of_measurement: "Minuten"
+  alarm_1_notify_offset_min:
+    name: notify_offset_min
+    initial: 0
+    min: 0
+    max: 30
+    step: 1
+    unit_of_measurement: "Minuten"
+  alarm_1_light_offset_min:
+    name: light_offset_min
+    initial: -5
+    min: -45
+    max: 90
+    step: 1
+    unit_of_measurement: "Minuten"
+  alarm_1_music_offset_min:
+    name: music_offset_min
+    initial: 0 
+    min: -45
+    max: 60
+    step: 1
+    unit_of_measurement: "Minuten"
+  alarm_1_climate_offset_min:
+    name: climate_offset_min
+    initial: -60
+    min: -120
+    max: 0
+    step: 5
+    unit_of_measurement: "Minuten"
+
+
+#######################################################################################
+group:
+    alarm_1:
+        name: Wecker Schlafzimmer
+        entities:
+            - input_datetime.alarm_1_mon_time
+            - input_datetime.alarm_1_tue_time
+            - input_datetime.alarm_1_wed_time
+            - input_datetime.alarm_1_thu_time
+            - input_datetime.alarm_1_fri_time
+            - input_datetime.alarm_1_sat_time
+            - input_datetime.alarm_1_sun_time
+            - input_boolean.alarm_1_mon
+            - input_boolean.alarm_1_tue
+            - input_boolean.alarm_1_wed
+            - input_boolean.alarm_1_thu
+            - input_boolean.alarm_1_fri
+            - input_boolean.alarm_1_sat
+            - input_boolean.alarm_1_sun
+            - input_boolean.alarm_1_settings
+            - input_boolean.alarm_1_snoozing
+            - input_number.alarm_1_snoozing_min
+            - input_boolean.alarm_1_notify
+            - input_number.alarm_1_notify_offset_min
+            - input_boolean.alarm_1_wakeup_light
+            - input_number.alarm_1_light_offset_min
+            - input_boolean.alarm_1_wakeup_music
+            - input_number.alarm_1_music_offset_min
+            - input_boolean.alarm_1_wakeup_climate
+            - input_number.alarm_1_climate_offset_min
+
+#######################################################################################
+#######################################################################################
+automation:
+  - id: alarm_1_on
+    alias: "alarm_1_on"
+    initial_state: on
+    trigger:
+      - platform: state
+        entity_id: input_boolean.alarm_1_mon
+        to: "on"
+      - platform: state
+        entity_id: input_boolean.alarm_1_tue
+        to: "on"
+      - platform: state
+        entity_id: input_boolean.alarm_1_wed
+        to: "on"
+      - platform: state
+        entity_id: input_boolean.alarm_1_thu
+        to: "on"
+      - platform: state
+        entity_id: input_boolean.alarm_1_fri
+        to: "on"
+      - platform: state
+        entity_id: input_boolean.alarm_1_sat
+        to: "on"
+      - platform: state
+        entity_id: input_boolean.alarm_1_sun
+        to: "on"
+    action:
+      - service: automation.turn_on
+        data:
+          entity_id:
+            - automation.alarm_1_off
+            - automation.alarm_1_awake
+            - automation.alarm_1_notify
+            - automation.alarm_1_music
+            - automation.alarm_1_climate
+            - automation.alarm_1_light
+      - service: automation.turn_off
+        data:
+          entity_id:
+            - automation.alarm_1_on
+
+#######################################################################################
+  - id: alarm_1_off
+    alias: "alarm_1_off"
+    initial_state: off
+    trigger:
+      - platform: state
+        entity_id: input_boolean.alarm_1_mon
+        to: "off"
+      - platform: state
+        entity_id: input_boolean.alarm_1_tue
+        to: "off"
+      - platform: state
+        entity_id: input_boolean.alarm_1_wed
+        to: "off"
+      - platform: state
+        entity_id: input_boolean.alarm_1_thu
+        to: "off"
+      - platform: state
+        entity_id: input_boolean.alarm_1_fri
+        to: "off"
+      - platform: state
+        entity_id: input_boolean.alarm_1_sat
+        to: "off"
+      - platform: state
+        entity_id: input_boolean.alarm_1_sun
+        to: "off"
+    condition:
+      condition: and
+      conditions:
+        - condition: state
+          entity_id: input_boolean.alarm_1_mon
+          state: 'off'
+        - condition: state
+          entity_id: input_boolean.alarm_1_tue
+          state: 'off'
+        - condition: state
+          entity_id: input_boolean.alarm_1_wed
+          state: 'off'
+        - condition: state
+          entity_id: input_boolean.alarm_1_thu
+          state: 'off'
+        - condition: state
+          entity_id: input_boolean.alarm_1_fri
+          state: 'off'
+        - condition: state
+          entity_id: input_boolean.alarm_1_sat
+          state: 'off'
+        - condition: state
+          entity_id: input_boolean.alarm_1_sun
+          state: 'off'
+    action:
+      - service: automation.turn_off
+        data:
+          entity_id:
+            - automation.alarm_1_off
+            - automation.alarm_1_awake
+            - automation.alarm_1_notify
+            - automation.alarm_1_music
+            - automation.alarm_1_climate
+            - automation.alarm_1_light
+      - service: automation.turn_on
+        data:
+          entity_id:
+            - automation.alarm_1_on
+
+#######################################################################################
+  - id: alarm_1_awake
+    alias: "alarm_1_awake"
+    initial_state: off
+    trigger:
+      - platform: event
+        event_type: ios.notification_action_fired
+        event_data:
+          actionName: ALARM_1_AWAKE
+    action:
+      - service: script.turn_on
+        entity_id: script.alarm_1_awake
+
+#######################################################################################
+  - id: alarm_1_snoozing
+    alias: "alarm_1_snoozing"
+    initial_state: off
+    trigger:
+      - platform: event
+        event_type: ios.notification_action_fired
+        event_data:
+          actionName: ALARM_1_SNOOZE
+#      - platform: time
+#        seconds: '/10'
+    condition:
+      - condition: state
+        entity_id: input_boolean.alarm_1_snoozing
+        state: 'on'
+    action:
+      - service: script.turn_on
+        entity_id: script.alarm_1_snoozing
+            
+        
+#######################################################################################
+  - id: alarm_1_notify
+    alias: "alarm_1_notify"
+    initial_state: off
+    trigger:
+      - platform: time
+        minutes: '/1'
+        seconds: 00
+    condition:
+      condition: and
+      conditions:
+        - condition: state
+          entity_id: input_boolean.alarm_1_notify
+          state: 'on'
+        - condition: or
+          conditions:
+            - condition: and
+              conditions:
+                - condition: state
+                  entity_id: input_boolean.alarm_1_mon
+                  state: 'on'
+                - condition: template
+                  value_template: "{{ states('sensor.time') == ((states.input_datetime.alarm_1_mon_time.attributes.timestamp | int + (1*(states('input_number.alarm_1_notify_offset_min') | int)*60)) | timestamp_custom('%H:%M', False)) }}"
+                - condition: time
+                  weekday:
+                    - mon
+            - condition: and
+              conditions:
+                - condition: state
+                  entity_id: input_boolean.alarm_1_tue
+                  state: 'on'
+                - condition: template
+                  value_template: "{{ states('sensor.time') == ((states.input_datetime.alarm_1_tue_time.attributes.timestamp | int + (1*(states('input_number.alarm_1_notify_offset_min') | int)*60)) | timestamp_custom('%H:%M', False)) }}"
+                - condition: time
+                  weekday:
+                    - tue
+            - condition: and
+              conditions:
+                - condition: state
+                  entity_id: input_boolean.alarm_1_wed
+                  state: 'on'
+                - condition: template
+                  value_template: "{{ states('sensor.time') == ((states.input_datetime.alarm_1_wed_time.attributes.timestamp | int + (1*(states('input_number.alarm_1_notify_offset_min') | int)*60)) | timestamp_custom('%H:%M', False)) }}"
+                - condition: time
+                  weekday:
+                    - wed
+            - condition: and
+              conditions:
+                - condition: state
+                  entity_id: input_boolean.alarm_1_thu
+                  state: 'on'
+                - condition: template
+                  value_template: "{{ states('sensor.time') == ((states.input_datetime.alarm_1_thu_time.attributes.timestamp | int + (1*(states('input_number.alarm_1_notify_offset_min') | int)*60)) | timestamp_custom('%H:%M', False)) }}"
+                - condition: time
+                  weekday:
+                    - thu
+            - condition: and
+              conditions:
+                - condition: state
+                  entity_id: input_boolean.alarm_1_fri
+                  state: 'on'
+                - condition: template
+                  value_template: "{{ states('sensor.time') == ((states.input_datetime.alarm_1_fri_time.attributes.timestamp | int + (1*(states('input_number.alarm_1_notify_offset_min') | int)*60)) | timestamp_custom('%H:%M', False)) }}"
+                - condition: time
+                  weekday:
+                    - fri
+            - condition: and
+              conditions:
+                - condition: state
+                  entity_id: input_boolean.alarm_1_sat
+                  state: 'on'
+                - condition: template
+                  value_template: "{{ states('sensor.time') == ((states.input_datetime.alarm_1_sat_time.attributes.timestamp | int + (1*(states('input_number.alarm_1_notify_offset_min') | int)*60)) | timestamp_custom('%H:%M', False)) }}"
+                - condition: time
+                  weekday:
+                    - sat
+            - condition: and
+              conditions:
+                - condition: state
+                  entity_id: input_boolean.alarm_1_sun
+                  state: 'on'
+                - condition: template
+                  value_template: "{{ states('sensor.time') == ((states.input_datetime.alarm_1_sun_time.attributes.timestamp | int + (1*(states('input_number.alarm_1_notify_offset_min') | int)*60)) | timestamp_custom('%H:%M', False)) }}"
+                - condition: time
+                  weekday:
+                    - sun
+    action:
+      - service: script.turn_on
+        entity_id: script.alarm_1_notify
+
+#######################################################################################
+  - id: alarm_1_music
+    alias: "alarm_1_music"
+    initial_state: off
+    trigger:
+      - platform: time
+        minutes: '/1'
+        seconds: 00
+    condition:
+      condition: and
+      conditions:
+        - condition: state
+          entity_id: input_boolean.alarm_1_wakeup_music
+          state: 'on'
+        - condition: or
+          conditions:
+            - condition: and
+              conditions:
+                - condition: state
+                  entity_id: input_boolean.alarm_1_mon
+                  state: 'on'
+                - condition: template
+                  value_template: "{{ states('sensor.time') == ((states.input_datetime.alarm_1_mon_time.attributes.timestamp | int + (1*(states('input_number.alarm_1_music_offset_min') | int)*60)) | timestamp_custom('%H:%M', False)) }}"
+                - condition: time
+                  weekday:
+                    - mon
+            - condition: and
+              conditions:
+                - condition: state
+                  entity_id: input_boolean.alarm_1_tue
+                  state: 'on'
+                - condition: template
+                  value_template: "{{ states('sensor.time') == ((states.input_datetime.alarm_1_tue_time.attributes.timestamp | int + (1*(states('input_number.alarm_1_music_offset_min') | int)*60)) | timestamp_custom('%H:%M', False)) }}"
+                - condition: time
+                  weekday:
+                    - tue
+            - condition: and
+              conditions:
+                - condition: state
+                  entity_id: input_boolean.alarm_1_wed
+                  state: 'on'
+                - condition: template
+                  value_template: "{{ states('sensor.time') == ((states.input_datetime.alarm_1_wed_time.attributes.timestamp | int + (1*(states('input_number.alarm_1_music_offset_min') | int)*60)) | timestamp_custom('%H:%M', False)) }}"
+                - condition: time
+                  weekday:
+                    - wed
+            - condition: and
+              conditions:
+                - condition: state
+                  entity_id: input_boolean.alarm_1_thu
+                  state: 'on'
+                - condition: template
+                  value_template: "{{ states('sensor.time') == ((states.input_datetime.alarm_1_thu_time.attributes.timestamp | int + (1*(states('input_number.alarm_1_music_offset_min') | int)*60)) | timestamp_custom('%H:%M', False)) }}"
+                - condition: time
+                  weekday:
+                    - thu
+            - condition: and
+              conditions:
+                - condition: state
+                  entity_id: input_boolean.alarm_1_fri
+                  state: 'on'
+                - condition: template
+                  value_template: "{{ states('sensor.time') == ((states.input_datetime.alarm_1_fri_time.attributes.timestamp | int + (1*(states('input_number.alarm_1_music_offset_min') | int)*60)) | timestamp_custom('%H:%M', False)) }}"
+                - condition: time
+                  weekday:
+                    - fri
+            - condition: and
+              conditions:
+                - condition: state
+                  entity_id: input_boolean.alarm_1_sat
+                  state: 'on'
+                - condition: template
+                  value_template: "{{ states('sensor.time') == ((states.input_datetime.alarm_1_sat_time.attributes.timestamp | int + (1*(states('input_number.alarm_1_music_offset_min') | int)*60)) | timestamp_custom('%H:%M', False)) }}"
+                - condition: time
+                  weekday:
+                    - sat
+            - condition: and
+              conditions:
+                - condition: state
+                  entity_id: input_boolean.alarm_1_sun
+                  state: 'on'
+                - condition: template
+                  value_template: "{{ states('sensor.time') == ((states.input_datetime.alarm_1_sun_time.attributes.timestamp | int + (1*(states('input_number.alarm_1_music_offset_min') | int)*60)) | timestamp_custom('%H:%M', False)) }}"
+                - condition: time
+                  weekday:
+                    - sun
+    action:
+      - service: script.turn_on
+        entity_id: script.alarm_1_music
+
+#######################################################################################
+  - id: alarm_1_light
+    alias: "alarm_1_light"
+    initial_state: off
+    trigger:
+      - platform: time
+        minutes: '/1'
+        seconds: 00
+    condition:
+      condition: and
+      conditions:
+        - condition: state
+          entity_id: input_boolean.alarm_1_wakeup_light
+          state: 'on'
+        - condition: or
+          conditions:
+            - condition: and
+              conditions:
+                - condition: state
+                  entity_id: input_boolean.alarm_1_mon
+                  state: 'on'
+                - condition: template
+                  value_template: "{{ states('sensor.time') == ((states.input_datetime.alarm_1_mon_time.attributes.timestamp | int + (1*(states('input_number.alarm_1_light_offset_min') | int)*60)) | timestamp_custom('%H:%M', False)) }}"
+                - condition: time
+                  weekday:
+                    - mon
+            - condition: and
+              conditions:
+                - condition: state
+                  entity_id: input_boolean.alarm_1_tue
+                  state: 'on'
+                - condition: template
+                  value_template: "{{ states('sensor.time') == ((states.input_datetime.alarm_1_tue_time.attributes.timestamp | int + (1*(states('input_number.alarm_1_light_offset_min') | int)*60)) | timestamp_custom('%H:%M', False)) }}"
+                - condition: time
+                  weekday:
+                    - tue
+            - condition: and
+              conditions:
+                - condition: state
+                  entity_id: input_boolean.alarm_1_wed
+                  state: 'on'
+                - condition: template
+                  value_template: "{{ states('sensor.time') == ((states.input_datetime.alarm_1_wed_time.attributes.timestamp | int + (1*(states('input_number.alarm_1_light_offset_min') | int)*60)) | timestamp_custom('%H:%M', False)) }}"
+                - condition: time
+                  weekday:
+                    - wed
+            - condition: and
+              conditions:
+                - condition: state
+                  entity_id: input_boolean.alarm_1_thu
+                  state: 'on'
+                - condition: template
+                  value_template: "{{ states('sensor.time') == ((states.input_datetime.alarm_1_thu_time.attributes.timestamp | int + (1*(states('input_number.alarm_1_light_offset_min') | int)*60)) | timestamp_custom('%H:%M', False)) }}"
+                - condition: time
+                  weekday:
+                    - thu
+            - condition: and
+              conditions:
+                - condition: state
+                  entity_id: input_boolean.alarm_1_fri
+                  state: 'on'
+                - condition: template
+                  value_template: "{{ states('sensor.time') == ((states.input_datetime.alarm_1_fri_time.attributes.timestamp | int + (1*(states('input_number.alarm_1_light_offset_min') | int)*60)) | timestamp_custom('%H:%M', False)) }}"
+                - condition: time
+                  weekday:
+                    - fri
+            - condition: and
+              conditions:
+                - condition: state
+                  entity_id: input_boolean.alarm_1_sat
+                  state: 'on'
+                - condition: template
+                  value_template: "{{ states('sensor.time') == ((states.input_datetime.alarm_1_sat_time.attributes.timestamp | int + (1*(states('input_number.alarm_1_light_offset_min') | int)*60)) | timestamp_custom('%H:%M', False)) }}"
+                - condition: time
+                  weekday:
+                    - sat
+            - condition: and
+              conditions:
+                - condition: state
+                  entity_id: input_boolean.alarm_1_sun
+                  state: 'on'
+                - condition: template
+                  value_template: "{{ states('sensor.time') == ((states.input_datetime.alarm_1_sun_time.attributes.timestamp | int + (1*(states('input_number.alarm_1_light_offset_min') | int)*60)) | timestamp_custom('%H:%M', False)) }}"
+                - condition: time
+                  weekday:
+                    - sun
+    action:
+      - service: script.turn_on
+        entity_id: script.alarm_1_light
+
+#######################################################################################
+  - id: alarm_1_climate
+    alias: "alarm_1_climate"
+    initial_state: off
+    trigger:
+      - platform: time
+        minutes: '/1'
+        seconds: 00
+    condition:
+      condition: and
+      conditions:
+        - condition: state
+          entity_id: input_boolean.alarm_1_wakeup_climate
+          state: 'on'
+        - condition: or
+          conditions:
+            - condition: and
+              conditions:
+                - condition: state
+                  entity_id: input_boolean.alarm_1_mon
+                  state: 'on'
+                - condition: template
+                  value_template: "{{ states('sensor.time') == ((states.input_datetime.alarm_1_mon_time.attributes.timestamp | int + (1*(states('input_number.alarm_1_climate_offset_min') | int)*60)) | timestamp_custom('%H:%M', False)) }}"
+                - condition: time
+                  weekday:
+                    - mon
+            - condition: and
+              conditions:
+                - condition: state
+                  entity_id: input_boolean.alarm_1_tue
+                  state: 'on'
+                - condition: template
+                  value_template: "{{ states('sensor.time') == ((states.input_datetime.alarm_1_tue_time.attributes.timestamp | int + (1*(states('input_number.alarm_1_climate_offset_min') | int)*60)) | timestamp_custom('%H:%M', False)) }}"
+                - condition: time
+                  weekday:
+                    - tue
+            - condition: and
+              conditions:
+                - condition: state
+                  entity_id: input_boolean.alarm_1_wed
+                  state: 'on'
+                - condition: template
+                  value_template: "{{ states('sensor.time') == ((states.input_datetime.alarm_1_wed_time.attributes.timestamp | int + (1*(states('input_number.alarm_1_climate_offset_min') | int)*60)) | timestamp_custom('%H:%M', False)) }}"
+                - condition: time
+                  weekday:
+                    - wed
+            - condition: and
+              conditions:
+                - condition: state
+                  entity_id: input_boolean.alarm_1_thu
+                  state: 'on'
+                - condition: template
+                  value_template: "{{ states('sensor.time') == ((states.input_datetime.alarm_1_thu_time.attributes.timestamp | int + (1*(states('input_number.alarm_1_climate_offset_min') | int)*60)) | timestamp_custom('%H:%M', False)) }}"
+                - condition: time
+                  weekday:
+                    - thu
+            - condition: and
+              conditions:
+                - condition: state
+                  entity_id: input_boolean.alarm_1_fri
+                  state: 'on'
+                - condition: template
+                  value_template: "{{ states('sensor.time') == ((states.input_datetime.alarm_1_fri_time.attributes.timestamp | int + (1*(states('input_number.alarm_1_climate_offset_min') | int)*60)) | timestamp_custom('%H:%M', False)) }}"
+                - condition: time
+                  weekday:
+                    - fri
+            - condition: and
+              conditions:
+                - condition: state
+                  entity_id: input_boolean.alarm_1_sat
+                  state: 'on'
+                - condition: template
+                  value_template: "{{ states('sensor.time') == ((states.input_datetime.alarm_1_sat_time.attributes.timestamp | int + (1*(states('input_number.alarm_1_climate_offset_min') | int)*60)) | timestamp_custom('%H:%M', False)) }}"
+                - condition: time
+                  weekday:
+                    - sat
+            - condition: and
+              conditions:
+                - condition: state
+                  entity_id: input_boolean.alarm_1_sun
+                  state: 'on'
+                - condition: template
+                  value_template: "{{ states('sensor.time') == ((states.input_datetime.alarm_1_sun_time.attributes.timestamp | int + (1*(states('input_number.alarm_1_climate_offset_min') | int)*60)) | timestamp_custom('%H:%M', False)) }}"
+                - condition: time
+                  weekday:
+                    - sun
+    action:
+      - service: script.turn_on
+        entity_id: script.alarm_1_climate
+

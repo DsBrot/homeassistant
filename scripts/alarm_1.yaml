@@ -1,0 +1,98 @@
+#######################################################################################
+alarm_1_awake:
+  sequence:
+    - service: media_player.volume_set
+      data:
+        entity_id:
+          - media_player.sonos_speaker_bedroom
+        volume_level: 0.06
+    - service: light.turn_off
+      data:
+        entity_id:
+          - light.bedroom_1_0
+    - service: automation.trigger
+      entity_id: automation.bedroom_bedtime_stop
+      
+
+#######################################################################################
+alarm_1_snoozing:
+  sequence:
+    - service: light.turn_off
+      data:
+        entity_id:
+          - light.bedroom_1_0
+          - light.bedroom_2_0
+    - delay: '{{ (states.input_number.alarm_1_snoozing_min.state | int * 60 ) }}'
+    #- delay: "00:02:00"
+    #- delay: "{{ states('input_number.alarm_1_snoozing_min') | multiply(60) | timestamp_custom('%H:%M:%S',False) }}"
+    - service: media_player.volume_up
+      entity_id:
+        - media_player.sonos_speaker_bedroom
+    - service: automation.trigger
+      data:
+        entity_id:
+          - automation.alarm_1_light
+    - service: light.turn_on
+      entity_id:
+        - light.bedroom_2_0
+      data:
+        brightness_pct: 25
+    - service: light.turn_on
+      entity_id:
+        - light.bedroom_2_0
+      data:
+        brightness_pct: 100
+        transition: 300
+    - service: script.turn_on
+      entity_id: script.alarm_1_notify
+
+#######################################################################################
+alarm_1_notify:
+  sequence:
+    - service: notify.all
+      data:
+        title: "Alarm Clock"
+        message: "Good morning ... standup!"
+        data:
+          push:
+            category: "alarm_1_clock"
+            badge: 0
+
+#######################################################################################
+alarm_1_music:
+  sequence:
+    - service: media_player.turn_on
+      entity_id:
+        - media_player.sonos_speaker_bedroom
+    - service: media_player.volume_set
+      data:
+        entity_id:
+          - media_player.sonos_speaker_bedroom
+        volume_level: 0.06
+
+#######################################################################################
+alarm_1_light:
+  sequence:
+    - service: light.turn_on
+      entity_id:
+        - light.bedroom_1_0
+      data:
+        brightness_pct: 1
+    - service: light.turn_on
+      entity_id:
+        - light.bedroom_1_0
+      data:
+        brightness_pct: 100
+        transition: 300
+
+#######################################################################################
+alarm_1_climate:
+  sequence:
+    - service: climate.set_temperature
+      data:
+        entity_id: climate.bedroom_1_0
+        temperature: 21
+    - service: climate.set_temperature
+      data:
+        entity_id: climate.bath_1_0
+        temperature: 22
