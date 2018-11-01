@@ -96,3 +96,4 @@ alarm_1_climate:
       data:
         entity_id: climate.bath_1_0
         temperature: 22
+

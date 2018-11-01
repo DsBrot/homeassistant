@@ -195,6 +195,7 @@ automation:
           entity_id:
             - automation.alarm_1_off
             - automation.alarm_1_awake
+            - automation.alarm_1_snoozing
             - automation.alarm_1_notify
             - automation.alarm_1_music
             - automation.alarm_1_climate
@@ -260,6 +261,7 @@ automation:
           entity_id:
             - automation.alarm_1_off
             - automation.alarm_1_awake
+            - automation.alarm_1_snoozing
             - automation.alarm_1_notify
             - automation.alarm_1_music
             - automation.alarm_1_climate
@@ -661,4 +663,5 @@ automation:
     action:
       - service: script.turn_on
         entity_id: script.alarm_1_climate
+
 
